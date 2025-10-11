@@ -16,15 +16,23 @@ export function App() {
     {
       userName: "Javicci",
       name: "Javier Gracia",
-      isFollowing: true,
+      isFollowing: false,
     },
   ];
+
+  /*posible solucion para generar una id unica para cada usuario
+  const usersId = users.map((item) => {
+    return { ...item, id: crypto.randomUUID() };
+  });
+  */
   return (
     <section className="App">
       {users.map((user) => {
         const { userName, name, isFollowing } = user;
         return (
           <TwitterFollowCard
+            /* utilizamos el usuario dado que sera el id unico*/
+            key={userName}
             userName={userName}
             initialIsFollowing={isFollowing}
           >
