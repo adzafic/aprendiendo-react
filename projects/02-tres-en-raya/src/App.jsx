@@ -1,43 +1,8 @@
 import { useState } from "react";
-const TURNS = {
-  X: "x",
-  O: "o",
-};
-const WINNING_COMBOS = [
-  [0, 1, 2], // filas
-  [3, 4, 5],
-  [6, 7, 8],
-  [0, 3, 6], // columnas
-  [1, 4, 7],
-  [2, 5, 8],
-  [0, 4, 8], // diagonales
-  [2, 4, 6],
-];
-
-const checkWinnerCombo = (boardToCheck) => {
-  for (const [a, b, c] of WINNING_COMBOS) {
-    if (
-      boardToCheck[a] &&
-      boardToCheck[a] === boardToCheck[b] &&
-      boardToCheck[a] === boardToCheck[c]
-    ) {
-      return boardToCheck[a];
-    }
-  }
-  return null;
-};
-
-const Cuadrado = ({ children, updateBoard, posicion, isSelected }) => {
-  const className = `square ${isSelected ? "is-selected" : ""}`;
-  const handleClick = () => {
-    updateBoard(posicion);
-  };
-  return (
-    <div onClick={handleClick} className={className} key={posicion}>
-      {children}
-    </div>
-  );
-};
+import { Cuadrado } from "./components/Cuadrado";
+import { Winner } from "./components/Winner";
+import { TURNS } from "./constantes";
+import { checkWinnerCombo, checkEndGame } from "./logic/board";
 
 function App() {
   const [tablero, setTablero] = useState(Array(9).fill(null));
@@ -57,7 +22,7 @@ function App() {
     const nuevoTurno = turn == TURNS.X ? TURNS.O : TURNS.X;
     setTurn(nuevoTurno);
 
-    if (nuevoTablero.every((cell) => cell != null)) {
+    if (checkEndGame(nuevoTablero)) {
       setWinner(false);
     }
   };
@@ -84,19 +49,7 @@ function App() {
         <Cuadrado isSelected={turn == TURNS.X}>{TURNS.X}</Cuadrado>
         <Cuadrado isSelected={turn == TURNS.O}>{TURNS.O}</Cuadrado>
       </section>
-      {winner != null && (
-        <section className="winner">
-          <div className="text">
-            <h2>{winner == false ? "Empate" : "Gano"}</h2>
-            <header className="win">
-              <Cuadrado>{winner}</Cuadrado>
-            </header>
-            <footer>
-              <button onClick={resetGame}>Empezar de nuevo</button>
-            </footer>
-          </div>
-        </section>
-      )}
+      <Winner winner={winner} resetGame={resetGame} />
     </main>
   );
 }
