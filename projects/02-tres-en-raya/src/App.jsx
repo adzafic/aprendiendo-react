@@ -5,8 +5,14 @@ import { TURNS } from "./constantes";
 import { checkWinnerCombo, checkEndGame } from "./logic/board";
 
 function App() {
-  const [tablero, setTablero] = useState(Array(9).fill(null));
-  const [turn, setTurn] = useState(TURNS.X);
+  const [tablero, setTablero] = useState(() => {
+    const board = JSON.parse(window.localStorage.getItem("board"));
+    return board ? board : Array(9).fill(null);
+  });
+  const [turn, setTurn] = useState(() => {
+    const turn = window.localStorage.getItem("turn");
+    return turn ? turn : TURNS.X;
+  });
   const [winner, setWinner] = useState(null);
 
   const updateBoard = (index) => {
@@ -14,15 +20,17 @@ function App() {
     const nuevoTablero = [...tablero];
     nuevoTablero[index] = turn;
     setTablero(nuevoTablero);
-    const newWinner = checkWinnerCombo(nuevoTablero);
-    if (newWinner) {
-      setWinner(newWinner);
-    }
 
     const nuevoTurno = turn == TURNS.X ? TURNS.O : TURNS.X;
     setTurn(nuevoTurno);
 
-    if (checkEndGame(nuevoTablero)) {
+    window.localStorage.setItem("board", JSON.stringify(nuevoTablero));
+    window.localStorage.setItem("turn", nuevoTurno);
+
+    const newWinner = checkWinnerCombo(nuevoTablero);
+    if (newWinner) {
+      setWinner(newWinner);
+    } else if (checkEndGame(nuevoTablero)) {
       setWinner(false);
     }
   };
@@ -30,6 +38,8 @@ function App() {
     setTablero(Array(9).fill(null));
     setWinner(null);
     setTurn(TURNS.X);
+    window.localStorage.removeItem("board");
+    window.localStorage.removeItem("turn");
   };
 
   return (
