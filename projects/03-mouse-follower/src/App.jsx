@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 
 function FollowMouse() {
   const [enabeled, setEnabled] = useState(false);
@@ -21,6 +21,10 @@ function FollowMouse() {
     }
 
     return limpiarEffecto;
+  }, [enabeled]);
+
+  useEffect(() => {
+    document.body.style.cursor = enabeled ? "none" : "auto";
   }, [enabeled]);
 
   return (
