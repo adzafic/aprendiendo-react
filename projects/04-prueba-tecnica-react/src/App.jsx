@@ -1,28 +1,11 @@
-import { useEffect, useState } from "react";
-import { getRandomFact } from "./servicios/fact.js";
 import "./App.css";
-
-const CAT_API_IMAGE_URL = (text) =>
-  `https://cataas.com/cat/says/${text}?fontSize=30&fontColor=red`;
+import { useFact } from "./hooks/useFact";
 
 function App() {
-  const [fact, setFact] = useState(null);
-  const [imageUrl, setImageUrl] = useState(null);
-
-  useEffect(() => {
-    getRandomFact().then((newFact) => setFact(newFact));
-  }, []);
-
-  useEffect(() => {
-    if (!fact) return;
-
-    const threeFirstWordsFromFact = fact.split(" ", 3);
-    const newImageUrl = CAT_API_IMAGE_URL(threeFirstWordsFromFact);
-    setImageUrl(newImageUrl);
-  }, [fact]);
+  const { fact, imageUrl, getAndSetRandomFact } = useFact();
 
   const handleClick = () => {
-    getRandomFact().then((newFact) => setFact(newFact));
+    getAndSetRandomFact();
   };
 
   return (
