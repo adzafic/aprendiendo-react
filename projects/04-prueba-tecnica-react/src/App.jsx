@@ -6,7 +6,7 @@ const CAT_API_IMAGE_URL = (text) =>
 
 function App() {
   const [fact, setFact] = useState(null);
-  const [firstWord, setFirstWord] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
 
   useEffect(() => {
     fetch(CAT_API_FACTS_URL)
@@ -18,14 +18,15 @@ function App() {
     if (!fact) return;
     //const firstWordFromFact = fact.split(" ")[0];
     const threeFirstWordsFromFact = fact.split(" ", 3);
-    setFirstWord(threeFirstWordsFromFact);
+    const newImageUrl = CAT_API_IMAGE_URL(threeFirstWordsFromFact);
+    setImageUrl(newImageUrl);
   }, [fact]);
 
   return (
     <>
       <h1>Prueba Técnica API CATS</h1>
       {fact && <p>{fact}</p>}
-      {firstWord && <img src={CAT_API_IMAGE_URL(firstWord)} alt={fact} />}
+      {imageUrl && <img src={imageUrl} alt={fact} />}
     </>
   );
 }
