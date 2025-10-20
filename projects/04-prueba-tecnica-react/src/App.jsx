@@ -1,4 +1,5 @@
 import { use, useEffect, useState } from "react";
+import "./App.css";
 
 const CAT_API_FACTS_URL = "https://catfact.ninja/fact";
 const CAT_API_IMAGE_URL = (text) =>
@@ -23,11 +24,13 @@ function App() {
   }, [fact]);
 
   return (
-    <>
+    <main>
       <h1>Prueba Técnica API CATS</h1>
-      {fact && <p>{fact}</p>}
-      {imageUrl && <img src={imageUrl} alt={fact} />}
-    </>
+      <section>
+        {fact && <p>{fact}</p>}
+        {imageUrl && <img src={imageUrl} alt={fact} />}
+      </section>
+    </main>
   );
 }
 
