@@ -2,7 +2,7 @@ import { use, useEffect, useState } from "react";
 
 const CAT_API_FACTS_URL = "https://catfact.ninja/fact";
 const CAT_API_IMAGE_URL = (text) =>
-  `https://cataas.com/cat/says/${text}?fontSize=10&fontColor=red`;
+  `https://cataas.com/cat/says/${text}?fontSize=&fontColor=red`;
 
 function App() {
   const [fact, setFact] = useState(null);
