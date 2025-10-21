@@ -5,15 +5,18 @@ const CAT_API_IMAGE_URL = (text) =>
 
 export const useFact = () => {
     const [fact, setFact] = useState(null);
-    const [imageUrl, setImageUrl] = useState(null);
 
-    const getAndSetRandomFact = () => {
+    const refreshFact = () => {
       getRandomFact().then((newFact) => setFact(newFact));
     };
     useEffect(() => {
-      getAndSetRandomFact();
+      refreshFact();
     }, []);
+    return { fact, refreshFact };
+  };
 
+  export const useImageUerl = ({fact}) => {
+    const [imageUrl, setImageUrl] = useState(null);
     useEffect(() => {
       if (!fact) return;
 
@@ -22,5 +25,5 @@ export const useFact = () => {
       setImageUrl(newImageUrl);
     }, [fact]);
 
-    return { fact, imageUrl, getAndSetRandomFact };
-  };
+    return { imageUrl };
+  }

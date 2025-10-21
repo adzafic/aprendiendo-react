@@ -1,11 +1,12 @@
 import "./App.css";
-import { useFact } from "./hooks/useFact";
+import { useFact, useImageUerl } from "./hooks/useFact";
 
 function App() {
-  const { fact, imageUrl, getAndSetRandomFact } = useFact();
+  const { fact, refreshFact } = useFact();
+  const { imageUrl } = useImageUerl({ fact });
 
   const handleClick = () => {
-    getAndSetRandomFact();
+    refreshFact();
   };
 
   return (
