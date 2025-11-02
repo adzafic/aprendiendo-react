@@ -1,7 +1,8 @@
 import "./App.css";
-import { useRef, useState } from "react";
+import { useRef, useState, useCallback } from "react";
 import { useMovies } from "./hooks/useMovie.js";
 import { useSearch } from "./hooks/useSearch.js";
+import debounce from "just-debounce-it";
 
 //todo: separar en componentes
 function ListOfMovies({ movies }) {
@@ -54,16 +55,21 @@ function App() {
     */
 
     const fields = Object.fromEntries(new FormData(event.target));
-    const value = searchInputRef.current.value;
-
-    //setSearch({ searchMovie: fields.search });
-    //setSearch(fields.search);
     getMovies({ searchMovie: fields.search });
   };
+
+  const debounceGetMovies = useCallback(
+    debounce((search) => {
+      console.log("Buscando peliculas con ", search);
+      getMovies({ searchMovie: search });
+    }, 1000),
+    [getMovies]
+  );
+
   const handleChange = function (event) {
     const fields = Object.fromEntries(new FormData(event.target.form));
     setSearch(fields.search);
-    getMovies({ searchMovie: fields.search });
+    debounceGetMovies(fields.search);
   };
 
   return (
@@ -87,6 +93,7 @@ function App() {
           <input
             type="checkbox"
             onChange={(e) => setSortMovies(e.target.checked)}
+            name="sort-movies"
           />
           <label htmlFor="sort-movies">Ordenar por titulo</label>
           <button type="submit">Buscar</button>
