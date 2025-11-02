@@ -1,5 +1,5 @@
 import "./App.css";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useMovies } from "./hooks/useMovie.js";
 import { useSearch } from "./hooks/useSearch.js";
 
@@ -38,7 +38,11 @@ function Movies({ listMovies }) {
 
 function App() {
   const { search, setSearch, error } = useSearch();
-  const { listMovies, getMovies } = useMovies({ searchMovie: search });
+  const [sortMovies, setSortMovies] = useState(false);
+  const { listMovies, getMovies } = useMovies({
+    searchMovie: search,
+    sortMovies,
+  });
   const searchInputRef = useRef();
 
   const handleSubmit = function (event) {
@@ -80,6 +84,11 @@ function App() {
               <p style={{ color: "red" }}>{error}</p>
             </div>
           )}
+          <input
+            type="checkbox"
+            onChange={(e) => setSortMovies(e.target.checked)}
+          />
+          <label htmlFor="sort-movies">Ordenar por titulo</label>
           <button type="submit">Buscar</button>
         </form>
       </header>
