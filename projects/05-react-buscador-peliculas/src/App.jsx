@@ -1,5 +1,7 @@
 import "./App.css";
-import { useEffect, useState, useRef } from "react";
+import { useRef } from "react";
+import { useMovies } from "./hooks/useMovie.js";
+import { useSearch } from "./hooks/useSearch.js";
 
 //todo: separar en componentes
 function ListOfMovies({ movies }) {
@@ -34,61 +36,9 @@ function Movies({ listMovies }) {
   );
 }
 
-function useSearch() {
-  const [search, setSearch] = useState("");
-  const [error, setError] = useState(null);
-  const isFirstRender = useRef(true);
-
-  useEffect(() => {
-    console.log("useEffect search", { search });
-    console.log("first Render", isFirstRender.current);
-    if (isFirstRender.current) {
-      isFirstRender.current = search === "";
-      return;
-    }
-    if (search === "") {
-      setError("No se puede buscar una pelicula vacia");
-      return;
-    }
-    if (search.match(/^\d+$/)) {
-      setError("No se puede buscar una pelicula con solo numeros");
-      return;
-    }
-    if (search.length < 3) {
-      setError("La busqueda debe tener al menos 3 caracteres");
-      return;
-    }
-    setError(null);
-  }, [search]);
-  return { search, setSearch, error };
-}
-
-function useMovies({ searchMovie }) {
-  const [listMovies, setListMovies] = useState([]);
-  useEffect(() => {
-    const movieUrl = `http://www.omdbapi.com/?i=tt3896198&apikey=${
-      import.meta.env.VITE_OMDB_API_KEY
-    }&s=${searchMovie}`;
-    fetch(movieUrl)
-      .then((response) => response.json())
-      .then((data) => {
-        const mapedMovies = data?.Search?.map((movie) => {
-          return {
-            title: movie.Title,
-            tear: movie.Year,
-            imdbID: movie.imdbID,
-            poster: movie.Poster,
-          };
-        });
-        setListMovies(mapedMovies);
-      });
-  }, [searchMovie]);
-  return { listMovies };
-}
-
 function App() {
   const { search, setSearch, error } = useSearch();
-  const { listMovies } = useMovies({ searchMovie: search });
+  const { listMovies, getMovies } = useMovies({ searchMovie: search });
   const searchInputRef = useRef();
 
   const handleSubmit = function (event) {
@@ -101,14 +51,15 @@ function App() {
 
     const fields = Object.fromEntries(new FormData(event.target));
     const value = searchInputRef.current.value;
-    console.log(value, fields.search);
 
     //setSearch({ searchMovie: fields.search });
-    setSearch(fields.search);
+    //setSearch(fields.search);
+    getMovies({ searchMovie: fields.search });
   };
   const handleChange = function (event) {
     const fields = Object.fromEntries(new FormData(event.target.form));
     setSearch(fields.search);
+    getMovies({ searchMovie: fields.search });
   };
 
   return (
