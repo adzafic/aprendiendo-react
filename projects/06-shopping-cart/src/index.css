@@ -53,3 +53,9 @@ ul {
   list-style: none;
   padding: 0;
 }
+
+.filters{
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
