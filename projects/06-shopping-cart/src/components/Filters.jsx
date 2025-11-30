@@ -1,8 +1,11 @@
 import "./Filters.css";
-import { useState } from "react";
+import { useState, useId } from "react";
 
 export function Filters({ handelSubmit }) {
-  var [minPrice, setMinPrice] = useState(0);
+  const [minPrice, setMinPrice] = useState(0);
+  const minPriceId = useId();
+  const categoryId = useId();
+  const productId = useId();
 
   function handleChangeMinPrice(event) {
     setMinPrice(Number(event.target.value));
@@ -10,25 +13,30 @@ export function Filters({ handelSubmit }) {
   return (
     <form className="filters" onSubmit={handelSubmit}>
       <div>
-        <label htmlFor="product">Producto</label>
-        <input type="text" placeholder="Search products..." name="product" />
+        <label htmlFor={productId}>Producto</label>
+        <input
+          id={productId}
+          type="text"
+          placeholder="Search products..."
+          name="product"
+        />
       </div>
       <div>
-        <label htmlFor="category">Category</label>
-        <select name="category" defaultValue="all">
+        <label htmlFor={categoryId}>Category</label>
+        <select id={categoryId} name="category" defaultValue="all">
           <option value="all">All</option>
           <option value="smartphones">Smartphones</option>
           <option value="laptops">Laptops</option>
         </select>
       </div>
       <div>
-        <label htmlFor="minPrice">Min Price: </label>
+        <label htmlFor={minPriceId}>Min Price: </label>
         <span>{minPrice}</span>
         <input
           type="range"
           name="minPrice"
           defaultValue={0}
-          id="price"
+          id={minPriceId}
           min="0"
           max="1000"
           onChange={handleChangeMinPrice}
