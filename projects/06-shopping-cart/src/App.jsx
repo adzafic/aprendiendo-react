@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Products } from "./components/Products";
+import data from "./mocks/products.json";
 const URL = "https://dummyjson.com/products";
 const URL_SEARCH = "https://dummyjson.com/products/search?q=";
 
@@ -14,10 +15,20 @@ function App() {
 
   useEffect(() => {
     console.table("Fetching products with filters:", filters);
+    console.log(data.products);
     var url = URL;
     if (filters.product) {
       url = `${URL_SEARCH}${filters.product}`;
     }
+    const filterProducts = function (products) {
+      console.log("Filtering products with filters:", products, filters);
+      return products.filter((product) => {
+        return (
+          product.price >= filters.minPrice &&
+          (filters.category == "all" || product.category === filters.category)
+        );
+      });
+    };
     fetch(url)
       .then((res) => res.json())
       .then((data) => {
@@ -25,17 +36,9 @@ function App() {
         var filteredProducts = filterProducts(data.products);
         setProducts(filteredProducts);
       });
+    //var filteredProducts = filterProducts(data.products);
+    //setProducts(filteredProducts);
   }, [filters]);
-
-  function filterProducts(products) {
-    console.log("Filtering products with filters:", products, filters);
-    return products.filter((product) => {
-      return (
-        product.price >= filters.minPrice &&
-        (filters.category == "all" || product.category === filters.category)
-      );
-    });
-  }
 
   function handelSubmit(event) {
     console.log("Submitting form");
