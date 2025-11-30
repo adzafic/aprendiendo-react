@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Products } from "./components/Products";
 import data from "./mocks/products.json";
+import { Header } from "./components/Header";
 const URL = "https://dummyjson.com/products";
 const URL_SEARCH = "https://dummyjson.com/products/search?q=";
 
@@ -10,7 +11,6 @@ function App() {
     category: "all",
     minPrice: 0,
   });
-  var [minPrice, setMinPrice] = useState(0);
   var [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -53,42 +53,9 @@ function App() {
     setFilters(newFilters);
   }
 
-  function handleChangeMinPrice(event) {
-    console.log("Changing filter:", event.target.name, event.target.value);
-    setMinPrice(Number(event.target.value));
-  }
-
   return (
     <>
-      <h1>Shopping Cart</h1>
-      <form className="filters" onSubmit={handelSubmit}>
-        <div>
-          <label htmlFor="product">Producto</label>
-          <input type="text" placeholder="Search products..." name="product" />
-        </div>
-        <div>
-          <label htmlFor="category">Category</label>
-          <select name="category" defaultValue="all">
-            <option value="all">All</option>
-            <option value="smartphones">Smartphones</option>
-            <option value="laptops">Laptops</option>
-          </select>
-        </div>
-        <div>
-          <label htmlFor="minPrice">Min Price: </label>
-          <span>{minPrice}</span>
-          <input
-            type="range"
-            name="minPrice"
-            defaultValue={0}
-            id="price"
-            min="0"
-            max="1000"
-            onChange={handleChangeMinPrice}
-          />
-        </div>
-        <button type="submit">Apply Filters</button>
-      </form>
+      <Header handelSubmit={handelSubmit} />
       <Products products={products} />
     </>
   );
